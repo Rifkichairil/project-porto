@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clear Cookies</title>
+  <style>
+    body { font-family: system-ui; max-width: 600px; margin: 50px auto; padding: 20px; }
+    button { padding: 12px 24px; font-size: 16px; cursor: pointer; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <h1>Clear NextAuth Cookies</h1>
+  <p>Klik tombol di bawah untuk menghapus cookies NextAuth:</p>
+  <button onclick="clearCookies()">Clear All Cookies</button>
+  <p id="result"></p>
+  
+  <script>
+    function clearCookies() {
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+      });
+      document.getElementById('result').innerHTML = '<span class="success">✓ Cookies cleared! Silakan refresh halaman admin.</span>';
+    }
+  </script>
+</body>
+</html>
