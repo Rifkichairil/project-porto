@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { mockCategories } from "@/lib/mock-data";
 import ProductForm from "@/components/admin/ProductForm";
-import AdminSidebar from "@/components/admin/AdminSidebar";
 import { useI18n } from "@/lib/i18n";
+import { Category } from "@/types";
 
 export default function NewProductPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const { t } = useI18n();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -19,32 +20,45 @@ export default function NewProductPage() {
     }
   }, [status, router]);
 
-  if (status === "loading") {
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch("/api/categories");
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        } else {
+          console.error("Failed to fetch categories");
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (status === "authenticated") {
+      fetchCategories();
+    }
+  }, [status]);
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+      <div className="flex items-center justify-center h-64">
         <div className="w-8 h-8 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin" />
       </div>
     );
   }
 
-  if (!session) {
-    return null;
-  }
-
   return (
-    <div className="min-h-screen bg-zinc-50">
-      <AdminSidebar user={session.user} />
-      <main className="lg:ml-64 p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div>
-            <h1 className="text-2xl font-bold text-zinc-900">{t("admin.product.new")}</h1>
-            <p className="text-zinc-600 mt-1">
-              {t("admin.product.new.subtitle")}
-            </p>
-          </div>
-          <ProductForm categories={mockCategories} />
-        </div>
-      </main>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900">{t("admin.product.new")}</h1>
+        <p className="text-zinc-600 mt-1">
+          {t("admin.product.new.subtitle")}
+        </p>
+      </div>
+      <ProductForm categories={categories} />
     </div>
   );
 }

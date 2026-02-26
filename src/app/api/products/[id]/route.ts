@@ -2,12 +2,69 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { createClientAdmin } from "@/lib/supabase";
+import { mockProducts } from "@/lib/mock-data";
 
-interface RouteParams {
-  params: Promise<{ id: string }>;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user?.role !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const supabase = createClientAdmin();
+
+    // Check if supabase is properly configured
+    if (!supabase || Object.keys(supabase).length === 0) {
+      console.log("Supabase not configured, returning mock product");
+      const product = mockProducts.find((p) => p.id === id);
+      if (!product) {
+        return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      }
+      return NextResponse.json(product);
+    }
+
+    const { data, error } = await supabase
+      .from("products")
+      .select(`
+        *,
+        category:categories(*),
+        images:product_images(*)
+      `)
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error("Error fetching product:", error);
+      // Fallback to mock data
+      const product = mockProducts.find((p) => p.id === id);
+      if (!product) {
+        return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      }
+      return NextResponse.json(product);
+    }
+
+    if (!data) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Error in GET product:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch product" },
+      { status: 500 }
+    );
+  }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== "admin") {
@@ -19,7 +76,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const supabase = createClientAdmin();
 
     // Update product
-    const { error: productError } = await supabase
+    const { data: product, error: productError } = await supabase
       .from("products")
       .update({
         name: body.name,
@@ -35,34 +92,39 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         status: body.status,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", id);
+      .eq("id", id)
+      .select()
+      .single();
 
     if (productError) {
       throw productError;
     }
 
-    // Delete existing images
-    await supabase.from("product_images").delete().eq("product_id", id);
+    // Handle images - delete existing and insert new
+    if (body.images) {
+      // Delete existing images
+      await supabase.from("product_images").delete().eq("product_id", id);
 
-    // Insert new images
-    if (body.images && body.images.length > 0) {
-      const { error: imagesError } = await supabase
-        .from("product_images")
-        .insert(
-          body.images.map((img: any, index: number) => ({
-            product_id: id,
-            url: img.url,
-            alt: img.alt || body.name,
-            order: index,
-          }))
-        );
+      // Insert new images
+      if (body.images.length > 0) {
+        const { error: imagesError } = await supabase
+          .from("product_images")
+          .insert(
+            body.images.map((img: any, index: number) => ({
+              product_id: id,
+              url: img.url,
+              alt: img.alt || body.name,
+              order: index,
+            }))
+          );
 
-      if (imagesError) {
-        console.error("Error inserting images:", imagesError);
+        if (imagesError) {
+          console.error("Error updating images:", imagesError);
+        }
       }
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json(product);
   } catch (error) {
     console.error("Error updating product:", error);
     return NextResponse.json(
@@ -72,7 +134,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== "admin") {
@@ -82,7 +147,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const supabase = createClientAdmin();
 
-    // Delete product (cascades to images)
+    // Delete product images first (foreign key constraint)
+    await supabase.from("product_images").delete().eq("product_id", id);
+
+    // Delete product
     const { error } = await supabase.from("products").delete().eq("id", id);
 
     if (error) {
