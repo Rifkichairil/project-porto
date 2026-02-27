@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DevFolio - Professional Software Solutions",
+  title: "RifkiLabs - Professional Software Solutions",
   description:
     "Custom-built applications for POS, Education Management, Community Systems, and more. Ready to deploy solutions tailored for businesses.",
   keywords: [
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
     "web development",
     "Laravel",
   ],
-  authors: [{ name: "DevFolio" }],
+  authors: [{ name: "RifkiLabs" }],
   openGraph: {
-    title: "DevFolio - Professional Software Solutions",
+    title: "RifkiLabs - Professional Software Solutions",
     description:
       "Custom-built applications for POS, Education Management, Community Systems, and more.",
     type: "website",

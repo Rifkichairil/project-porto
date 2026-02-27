@@ -19,7 +19,7 @@ export const defaultSettings: SiteSettings = {
   whatsappNumber: "6281234567890", // Format: 628xxxxxxxxxx (without +)
   whatsappMessage: "Halo, saya tertarik dengan produk yang Anda tawarkan. Bisa berikan informasi lebih detail?",
   email: "hello@devfolio.com",
-  siteName: "DevFolio",
+  siteName: "RifkiLabs",
   siteDescription: "Developer & Solusi Digital",
   showDemoButton: false, // Default: hidden
   priceDisplayMode: "hide", // Default: hide price

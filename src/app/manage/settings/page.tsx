@@ -210,7 +210,7 @@ export default function SettingsPage() {
                     type="text"
                     value={settings.siteName}
                     onChange={(e) => handleChange("siteName", e.target.value)}
-                    placeholder="DevFolio"
+                    placeholder="RifkiLabs"
                   />
                 </div>
                 <div>

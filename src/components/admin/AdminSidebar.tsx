@@ -109,7 +109,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           {/* Logo */}
           <div className="flex items-center gap-2 h-16 px-6 border-b border-zinc-100">
             <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">D</span>
+              <span className="text-white font-bold text-sm">R</span>
             </div>
             <span className="font-semibold text-zinc-900">Admin</span>
           </div>

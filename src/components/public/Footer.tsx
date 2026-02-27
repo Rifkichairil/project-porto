@@ -28,10 +28,10 @@ export default function Footer() {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 group">
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                <span className="text-zinc-900 font-bold text-sm">D</span>
+                <span className="text-zinc-900 font-bold text-sm">R</span>
               </div>
               <span className="text-lg font-semibold text-white tracking-tight">
-                DevFolio
+                RifkiLabs
               </span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed max-w-xs">
@@ -83,7 +83,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-16 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-center items-center gap-4">
           <p className="text-sm">
-            &copy; {new Date().getFullYear()} DevFolio. {t("footer.copyright")}
+            &copy; {new Date().getFullYear()} RifkiLabs. {t("footer.copyright")}
           </p>
         </div>
       </div>

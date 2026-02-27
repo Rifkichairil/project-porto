@@ -49,10 +49,10 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-              <span className="text-white font-bold text-sm">D</span>
+              <span className="text-white font-bold text-sm">R</span>
             </div>
             <span className="text-lg font-semibold text-zinc-900 tracking-tight">
-              DevFolio
+              RifkiLabs
             </span>
           </Link>
 

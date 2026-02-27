@@ -44,7 +44,7 @@ export default function LoginForm() {
     <Card className="w-full max-w-sm mx-auto">
       <CardHeader className="text-center pb-2">
         <div className="w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center mx-auto mb-4">
-          <span className="text-white font-bold">D</span>
+          <span className="text-white font-bold">R</span>
         </div>
         <h1 className="text-xl font-semibold text-zinc-900">{t("admin.login.title")}</h1>
         <p className="text-sm text-zinc-500 mt-1">
