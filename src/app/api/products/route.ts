@@ -84,9 +84,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const featured = searchParams.get("featured");
+    const admin = searchParams.get("admin");
+    const slug = searchParams.get("slug");
 
     const supabase = createClientAdmin();
 
@@ -97,6 +100,11 @@ export async function GET(request: NextRequest) {
         category:categories(*),
         images:product_images(*)
       `);
+
+    // Admin can see all products, public only sees active
+    if (!session || session.user?.role !== "admin" || admin !== "true") {
+      query = query.eq("status", "active");
+    }
 
     if (category) {
       const { data: catData } = await supabase
@@ -114,7 +122,10 @@ export async function GET(request: NextRequest) {
       query = query.eq("is_featured", true);
     }
 
-    query = query.eq("status", "active");
+    if (slug) {
+      query = query.eq("slug", slug);
+    }
+
     query = query.order("created_at", { ascending: false });
 
     const { data, error } = await query;

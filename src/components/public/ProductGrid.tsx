@@ -16,9 +16,41 @@ export default function ProductGrid({ products, categories }: ProductGridProps) 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { t } = useI18n();
 
-  const filteredProducts = selectedCategory
-    ? products.filter((p) => p.category?.slug === selectedCategory)
-    : products;
+  // Get featured products (max 6) from various categories for default view
+  const getFeaturedProducts = () => {
+    const featured = products.filter((p) => p.is_featured && p.status === "active");
+    
+    // If 6 or less, return all
+    if (featured.length <= 6) return featured;
+    
+    // Try to get products from different categories
+    const result: Product[] = [];
+    const categoryIds = [...new Set(featured.map((p) => p.category_id))];
+    
+    // Distribute evenly across categories
+    let index = 0;
+    while (result.length < 6 && featured.length > 0) {
+      const categoryId = categoryIds[index % categoryIds.length];
+      const product = featured.find((p) => p.category_id === categoryId && !result.includes(p));
+      
+      if (product) {
+        result.push(product);
+      }
+      
+      index++;
+      
+      // Break if no more products can be added
+      if (index > featured.length * 2) break;
+    }
+    
+    return result.slice(0, 6);
+  };
+
+  const filteredProducts = selectedCategory === null
+    ? getFeaturedProducts()
+    : selectedCategory === "all"
+      ? products // Show all products
+      : products.filter((p) => p.category?.slug === selectedCategory);
 
   return (
     <section id="products" className="py-24 md:py-32 bg-white">
@@ -48,6 +80,17 @@ export default function ProductGrid({ products, categories }: ProductGridProps) 
                   : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
               )}
             >
+              {t("products.filter.featured")}
+            </button>
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className={cn(
+                "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                selectedCategory === "all"
+                  ? "bg-zinc-900 text-white"
+                  : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+              )}
+            >
               {t("products.filter.all")}
             </button>
             {categories.map((category) => (
@@ -67,15 +110,28 @@ export default function ProductGrid({ products, categories }: ProductGridProps) 
           </div>
         </div>
 
-        {/* Products Count */}
-        <div className="mb-6 text-sm text-zinc-500">
-          Menampilkan {filteredProducts.length} produk
+        {/* Products Count & View All */}
+        <div className="mb-6 flex items-center justify-between">
+          <p className="text-sm text-zinc-500">
+            {selectedCategory === null 
+              ? `Menampilkan ${filteredProducts.length} produk unggulan`
+              : `Menampilkan ${filteredProducts.length} produk`
+            }
+          </p>
+          {(selectedCategory === null) && products.filter(p => p.is_featured).length > 6 && (
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className="text-sm font-medium text-zinc-900 hover:text-zinc-600 transition-colors"
+            >
+              Lihat Semua Produk →
+            </button>
+          )}
         </div>
 
         {/* Products Grid */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={selectedCategory || "all"}
+            key={selectedCategory || "featured"}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}

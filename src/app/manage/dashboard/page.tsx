@@ -1,29 +1,54 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { mockProducts } from "@/lib/mock-data";
 import ProductList from "@/components/admin/ProductList";
-import Button from "@/components/ui/Button";
-import { Plus, Package, Eye, Star } from "lucide-react";
+import { Package, Eye, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/Card";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { useI18n } from "@/lib/i18n";
+import { Product } from "@/types";
 
 export default function AdminDashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { t } = useI18n();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/admin");
+      router.push("/manage");
     }
   }, [status, router]);
 
-  if (status === "loading") {
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchProducts();
+    }
+  }, [status]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("/api/products?admin=true");
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data);
+      } else {
+        // Fallback to mock data
+        setProducts(mockProducts);
+      }
+    } catch {
+      setProducts(mockProducts);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (status === "loading" || isLoading) {
     return (
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin" />
@@ -35,11 +60,11 @@ export default function AdminDashboardPage() {
     return null;
   }
 
-  // Mock stats
+  // Stats from database
   const stats = {
-    total: mockProducts.length,
-    active: mockProducts.filter((p) => p.status === "active").length,
-    featured: mockProducts.filter((p) => p.is_featured).length,
+    total: products.length,
+    active: products.filter((p) => p.status === "active").length,
+    featured: products.filter((p) => p.is_featured).length,
   };
 
   return (
@@ -48,17 +73,9 @@ export default function AdminDashboardPage() {
       <main className="lg:ml-64 p-6">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold text-zinc-900">{t("admin.dashboard.title")}</h1>
-              <p className="text-sm text-zinc-500 mt-1">{t("admin.dashboard.subtitle")}</p>
-            </div>
-            <Link href="/admin/products/new">
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                {t("admin.dashboard.add")}
-              </Button>
-            </Link>
+          <div>
+            <h1 className="text-2xl font-semibold text-zinc-900">{t("admin.dashboard.title")}</h1>
+            <p className="text-sm text-zinc-500 mt-1">{t("admin.dashboard.subtitle")}</p>
           </div>
 
           {/* Stats */}
@@ -100,12 +117,15 @@ export default function AdminDashboardPage() {
             </Card>
           </div>
 
-          {/* Products */}
+          {/* Products - Show only 5 latest */}
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-zinc-900">{t("admin.dashboard.recent")}</h2>
+              <Link href="/manage/products" className="text-sm text-zinc-600 hover:text-zinc-900">
+                {t("admin.dashboard.viewAll")}
+              </Link>
             </div>
-            <ProductList products={mockProducts} />
+            <ProductList products={products.slice(0, 5)} />
           </div>
         </div>
       </main>

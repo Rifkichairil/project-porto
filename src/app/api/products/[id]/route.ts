@@ -24,7 +24,12 @@ export async function GET(
       if (!product) {
         return NextResponse.json({ error: "Product not found" }, { status: 404 });
       }
-      return NextResponse.json(product);
+      // Sort images by order before returning
+      const sortedProduct = {
+        ...product,
+        images: [...product.images].sort((a, b) => a.order - b.order)
+      };
+      return NextResponse.json(sortedProduct);
     }
 
     const { data, error } = await supabase
@@ -35,6 +40,7 @@ export async function GET(
         images:product_images(*)
       `)
       .eq("id", id)
+      .order("order", { foreignTable: "product_images", ascending: true })
       .single();
 
     if (error) {
@@ -44,7 +50,12 @@ export async function GET(
       if (!product) {
         return NextResponse.json({ error: "Product not found" }, { status: 404 });
       }
-      return NextResponse.json(product);
+      // Sort images by order before returning
+      const sortedProduct = {
+        ...product,
+        images: [...product.images].sort((a, b) => a.order - b.order)
+      };
+      return NextResponse.json(sortedProduct);
     }
 
     if (!data) {
@@ -73,6 +84,19 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
+    
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(id)) {
+      console.log("Invalid UUID format, using mock mode");
+      // Demo mode - return success without database
+      return NextResponse.json({ 
+        id, 
+        ...body,
+        updated_at: new Date().toISOString() 
+      });
+    }
+    
     const supabase = createClientAdmin();
 
     // Update product

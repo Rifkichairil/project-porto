@@ -1,6 +1,21 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Users table for admin authentication
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(255),
+    role VARCHAR(50) DEFAULT 'admin' CHECK (role IN ('admin', 'user')),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create index on email
+CREATE INDEX idx_users_email ON users(email);
+
 -- Categories table
 CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -89,11 +104,11 @@ CREATE POLICY "Allow admin full access on product images"
 
 -- Insert sample categories
 INSERT INTO categories (name, slug, description, icon) VALUES
-    ('Point of Sale (POS)', 'pos', 'Sistem kasir dan manajemen penjualan untuk berbagai jenis bisnis', 'ShoppingCart'),
-    ('Education', 'education', 'Sistem manajemen untuk lembaga pendidikan dan bimbel', 'GraduationCap'),
-    ('Community Management', 'community', 'Sistem manajemen untuk RT/RW dan organisasi komunitas', 'Users'),
-    ('Business Management', 'business', 'Sistem ERP dan manajemen bisnis terintegrasi', 'Building'),
-    ('Custom Development', 'custom', 'Solusi software kustom sesuai kebutuhan spesifik', 'Code');
+    ('Kasir (POS)', 'pos', 'Sistem kasir dan manajemen penjualan untuk berbagai jenis bisnis', 'ShoppingCart'),
+    ('Pendidikan', 'education', 'Sistem manajemen untuk lembaga pendidikan dan bimbel', 'GraduationCap'),
+    ('Komunitas', 'community', 'Sistem manajemen untuk RT/RW dan organisasi komunitas', 'Users'),
+    ('Bisnis', 'business', 'Sistem ERP dan manajemen bisnis terintegrasi', 'Building'),
+    ('Kustom', 'custom', 'Solusi software kustom sesuai kebutuhan spesifik', 'Code');
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -109,6 +124,15 @@ CREATE TRIGGER update_products_updated_at
     BEFORE UPDATE ON products
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+
+-- Create trigger for users
+CREATE TRIGGER update_users_updated_at
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Note: Run 'npm run setup:admin' to create admin user
+-- Default: admin@example.com / admin123
 
 -- Storage bucket setup for product images
 -- Run this in Supabase Dashboard SQL Editor or use Supabase CLI

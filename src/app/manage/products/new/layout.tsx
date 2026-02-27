@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
-export default async function EditProductLayout({
+export default async function NewProductLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ export default async function EditProductLayout({
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    redirect("/admin");
+    redirect("/manage");
   }
 
   return (

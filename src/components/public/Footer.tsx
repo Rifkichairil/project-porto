@@ -81,16 +81,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-16 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-center items-center gap-4">
           <p className="text-sm">
             &copy; {new Date().getFullYear()} DevFolio. {t("footer.copyright")}
           </p>
-          <Link
-            href="/admin"
-            className="text-sm hover:text-white transition-colors"
-          >
-            {t("footer.admin")}
-          </Link>
         </div>
       </div>
     </footer>

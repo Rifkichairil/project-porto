@@ -5,14 +5,14 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { useI18n } from "@/lib/i18n";
 
 const technologies = [
-  "Laravel",
-  "PHP",
-  "MySQL",
-  "Next.js",
-  "React",
-  "Tailwind",
-  "JavaScript",
-  "TypeScript",
+  "Dashboard Sistem",
+  "Manajemen Data",
+  "Website Company",
+  "Landing Page",
+  "Sistem Informasi",
+  "E-Catalog",
+  "Admin Panel",
+  "Custom Solution",
 ];
 
 export default function About() {

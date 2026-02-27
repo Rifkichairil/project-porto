@@ -16,7 +16,7 @@ export default function NewProductPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/admin");
+      router.push("/manage");
     }
   }, [status, router]);
 

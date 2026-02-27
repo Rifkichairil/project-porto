@@ -1,8 +1,35 @@
 import { Product, Category } from "@/types";
 
+// UUIDs for categories
+const categoryIds = {
+  pos: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  education: "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+  community: "c3d4e5f6-a7b8-9012-cdef-123456789012",
+  business: "d4e5f6a7-b8c9-0123-defa-234567890123",
+  custom: "e5f6a7b8-c9d0-1234-efab-345678901234",
+};
+
+// UUIDs for products
+const productIds = {
+  bimbel: "f6a7b8c9-d0e1-2345-fabc-456789012345",
+  rtrw: "a7b8c9d0-e1f2-3456-abcd-567890123456",
+  pos: "b8c9d0e1-f2a3-4567-bcde-678901234567",
+  printing: "c9d0e1f2-a3b4-5678-cdef-789012345678",
+  inventory: "d0e1f2a3-b4c5-6789-defa-890123456789",
+};
+
+// UUIDs for images
+const imageIds = [
+  "e1f2a3b4-c5d6-7890-efab-901234567890",
+  "f2a3b4c5-d6e7-8901-fabc-012345678901",
+  "a3b4c5d6-e7f8-9012-abcd-123456789012",
+  "b4c5d6e7-f8a9-0123-bcde-234567890123",
+  "c5d6e7f8-a9b0-1234-cdef-345678901234",
+];
+
 export const mockCategories: Category[] = [
   {
-    id: "1",
+    id: categoryIds.pos,
     name: "Kasir (POS)",
     slug: "pos",
     description: "Sistem kasir dan manajemen penjualan untuk berbagai jenis bisnis",
@@ -10,7 +37,7 @@ export const mockCategories: Category[] = [
     created_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "2",
+    id: categoryIds.education,
     name: "Pendidikan",
     slug: "education",
     description: "Sistem manajemen untuk lembaga pendidikan dan bimbel",
@@ -18,7 +45,7 @@ export const mockCategories: Category[] = [
     created_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "3",
+    id: categoryIds.community,
     name: "Komunitas",
     slug: "community",
     description: "Sistem manajemen untuk RT/RW dan organisasi komunitas",
@@ -26,7 +53,7 @@ export const mockCategories: Category[] = [
     created_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "4",
+    id: categoryIds.business,
     name: "Bisnis",
     slug: "business",
     description: "Sistem ERP dan manajemen bisnis terintegrasi",
@@ -34,7 +61,7 @@ export const mockCategories: Category[] = [
     created_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "5",
+    id: categoryIds.custom,
     name: "Kustom",
     slug: "custom",
     description: "Solusi software kustom sesuai kebutuhan spesifik",
@@ -45,7 +72,7 @@ export const mockCategories: Category[] = [
 
 export const mockProducts: Product[] = [
   {
-    id: "1",
+    id: productIds.bimbel,
     name: "Sistem Manajemen Bimbel",
     slug: "sistem-manajemen-bimbel",
     short_description:
@@ -53,15 +80,47 @@ export const mockProducts: Product[] = [
     description:
       "Sistem manajemen komprehensif yang dirancang khusus untuk bimbel dan lembaga pendidikan di Indonesia. Fitur meliputi pendaftaran siswa, penjadwalan kelas, pencatatan absensi, manajemen pembayaran, laporan kemajuan, dan notifikasi orang tua. Dibangun dengan Laravel untuk keandalan dan kemudahan perawatan.",
     price: 8000000,
-    category_id: "2",
+    category_id: categoryIds.education,
     category: mockCategories[1],
     images: [
       {
-        id: "1",
-        product_id: "1",
-        url: "https://placehold.co/800x600/fafafa/171717?text=Bimbel",
+        id: imageIds[0],
+        product_id: productIds.bimbel,
+        url: "https://placehold.co/800x600/fafafa/171717?text=Dashboard+Bimbel",
         alt: "Dashboard Bimbel",
         order: 0,
+        created_at: "2024-01-01T00:00:00Z",
+      },
+      {
+        id: imageIds[1],
+        product_id: productIds.bimbel,
+        url: "https://placehold.co/800x600/e4e4e7/171717?text=Data+Siswa",
+        alt: "Data Siswa",
+        order: 1,
+        created_at: "2024-01-01T00:00:00Z",
+      },
+      {
+        id: imageIds[2],
+        product_id: productIds.bimbel,
+        url: "https://placehold.co/800x600/d4d4d8/171717?text=Jadwal+Kelas",
+        alt: "Jadwal Kelas",
+        order: 2,
+        created_at: "2024-01-01T00:00:00Z",
+      },
+      {
+        id: imageIds[3],
+        product_id: productIds.bimbel,
+        url: "https://placehold.co/800x600/a1a1aa/ffffff?text=Pembayaran",
+        alt: "Pembayaran",
+        order: 3,
+        created_at: "2024-01-01T00:00:00Z",
+      },
+      {
+        id: imageIds[4],
+        product_id: productIds.bimbel,
+        url: "https://placehold.co/800x600/71717a/ffffff?text=Laporan",
+        alt: "Laporan",
+        order: 4,
         created_at: "2024-01-01T00:00:00Z",
       },
     ],
@@ -83,7 +142,7 @@ export const mockProducts: Product[] = [
     updated_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "2",
+    id: productIds.rtrw,
     name: "Sistem Manajemen RT/RW",
     slug: "sistem-manajemen-rt-rw",
     short_description:
@@ -91,12 +150,12 @@ export const mockProducts: Product[] = [
     description:
       "Sistem manajemen RT/RW modern yang mendigitalisasi administrasi lingkungan. Kelola data warga dengan mudah, pantau iuran bulanan, buat surat-surat resmi, dan fasilitasi komunikasi antar warga. Sesuai dengan kebutuhan administrasi Indonesia.",
     price: 6000000,
-    category_id: "3",
+    category_id: categoryIds.community,
     category: mockCategories[2],
     images: [
       {
-        id: "2",
-        product_id: "2",
+        id: "d1e2f3a4-b5c6-7890-1234-567890abcdef",
+        product_id: productIds.rtrw,
         url: "https://placehold.co/800x600/f4f4f5/171717?text=RT-RW",
         alt: "Dashboard RT/RW",
         order: 0,
@@ -121,7 +180,7 @@ export const mockProducts: Product[] = [
     updated_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "3",
+    id: productIds.pos,
     name: "Sistem Kasir Retail",
     slug: "sistem-kasir-retail",
     short_description:
@@ -129,12 +188,12 @@ export const mockProducts: Product[] = [
     description:
       "Solusi POS lengkap untuk bisnis retail. Kelola penjualan, stok, supplier, dan pelanggan dari satu dashboard. Mendukung multi-cabang, manajemen karyawan, dan laporan komprehensif.",
     price: 7000000,
-    category_id: "1",
+    category_id: categoryIds.pos,
     category: mockCategories[0],
     images: [
       {
-        id: "3",
-        product_id: "3",
+        id: "e2f3a4b5-c6d7-8901-2345-678901abcdef",
+        product_id: productIds.pos,
         url: "https://placehold.co/800x600/e4e4e7/171717?text=POS",
         alt: "Dashboard POS",
         order: 0,
@@ -159,7 +218,7 @@ export const mockProducts: Product[] = [
     updated_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "4",
+    id: productIds.printing,
     name: "Sistem Manajemen Percetakan",
     slug: "sistem-manajemen-percetakan",
     short_description:
@@ -167,12 +226,12 @@ export const mockProducts: Product[] = [
     description:
       "Sistem manajemen khusus untuk bisnis percetakan. Lacak pesanan dari masuk hingga selesai, kelola antrian produksi, atur variasi harga, dan simpan riwayat pelanggan. Mendukung berbagai jenis cetak: digital, offset, dan large format.",
     price: 5500000,
-    category_id: "4",
+    category_id: categoryIds.business,
     category: mockCategories[3],
     images: [
       {
-        id: "4",
-        product_id: "4",
+        id: "f3a4b5c6-d7e8-9012-3456-789012abcdef",
+        product_id: productIds.printing,
         url: "https://placehold.co/800x600/d4d4d8/171717?text=Printing",
         alt: "Dashboard Percetakan",
         order: 0,
@@ -197,7 +256,7 @@ export const mockProducts: Product[] = [
     updated_at: "2024-01-01T00:00:00Z",
   },
   {
-    id: "5",
+    id: productIds.inventory,
     name: "Sistem Manajemen Stok",
     slug: "sistem-manajemen-stok",
     short_description:
@@ -205,12 +264,12 @@ export const mockProducts: Product[] = [
     description:
       "Sistem manajemen stok yang simpel tapi powerful. Pantau level stok real-time, kelola informasi supplier, terima notifikasi stok menipis, dan generate laporan inventori komprehensif. Cocok untuk bisnis kecil hingga menengah.",
     price: 5000000,
-    category_id: "4",
+    category_id: categoryIds.business,
     category: mockCategories[3],
     images: [
       {
-        id: "5",
-        product_id: "5",
+        id: "a4b5c6d7-e8f9-0123-4567-890123abcdef",
+        product_id: productIds.inventory,
         url: "https://placehold.co/800x600/a1a1aa/ffffff?text=Inventory",
         alt: "Dashboard Stok",
         order: 0,

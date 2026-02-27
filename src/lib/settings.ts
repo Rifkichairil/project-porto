@@ -1,12 +1,17 @@
 // Static settings/configuration for the site
 // This can be replaced with database storage later
 
+export type PriceDisplayMode = "show" | "hide";
+
 export interface SiteSettings {
   whatsappNumber: string;
   whatsappMessage: string;
   email: string;
   siteName: string;
   siteDescription: string;
+  showDemoButton: boolean;
+  priceDisplayMode: PriceDisplayMode;
+  priceCustomText: string;
 }
 
 // Default settings - Edit these values to change site configuration
@@ -15,7 +20,10 @@ export const defaultSettings: SiteSettings = {
   whatsappMessage: "Halo, saya tertarik dengan produk yang Anda tawarkan. Bisa berikan informasi lebih detail?",
   email: "hello@devfolio.com",
   siteName: "DevFolio",
-  siteDescription: "Laravel Developer & Solusi Digital",
+  siteDescription: "Developer & Solusi Digital",
+  showDemoButton: false, // Default: hidden
+  priceDisplayMode: "hide", // Default: hide price
+  priceCustomText: "Hubungi untuk harga", // Default custom text
 };
 
 // Get settings (in the future, this can fetch from localStorage or database)

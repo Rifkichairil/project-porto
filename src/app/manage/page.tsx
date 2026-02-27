@@ -11,7 +11,7 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     if (session) {
-      router.push("/admin/dashboard");
+      router.push("/manage/dashboard");
     }
   }, [session, router]);
 

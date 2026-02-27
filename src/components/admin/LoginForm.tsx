@@ -30,7 +30,7 @@ export default function LoginForm() {
       if (result?.error) {
         setError(t("admin.login.error"));
       } else {
-        router.push("/admin/dashboard");
+        router.push("/manage/dashboard");
         router.refresh();
       }
     } catch {

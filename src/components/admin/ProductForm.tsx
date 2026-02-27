@@ -38,11 +38,13 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<{ url: string; alt: string; order: number }[]>(
-    product?.images.map((img) => ({
-      url: img.url,
-      alt: img.alt || "",
-      order: img.order,
-    })) || []
+    product?.images
+      .sort((a, b) => a.order - b.order)
+      .map((img) => ({
+        url: img.url,
+        alt: img.alt || "",
+        order: img.order,
+      })) || []
   );
 
   const {
@@ -80,8 +82,15 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
     setIsLoading(true);
 
     try {
+      // Auto-generate slug if empty (for new products)
+      let finalSlug = data.slug;
+      if (!product && (!finalSlug || finalSlug.trim() === "")) {
+        finalSlug = slugify(data.name);
+      }
+
       const payload = {
         ...data,
+        slug: finalSlug,
         price: data.price ? parseFloat(data.price) : null,
         features: data.features.split("\n").filter((f) => f.trim()),
         tech_stack: data.tech_stack.split("\n").filter((t) => t.trim()),
@@ -102,7 +111,7 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
           product ? "Produk berhasil diperbarui" : "Produk berhasil dibuat",
           "success"
         );
-        router.push("/admin/dashboard");
+        router.push("/manage/dashboard");
         router.refresh();
       } else {
         throw new Error("Gagal menyimpan produk");
@@ -141,6 +150,7 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
                 Nama Produk
               </label>
               <input
+                type="text"
                 {...register("name")}
                 onBlur={generateSlug}
                 placeholder="Contoh: Sistem Kasir"
@@ -154,8 +164,11 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
                 Slug
               </label>
               <input
+                type="text"
                 {...register("slug")}
                 placeholder="sistem-kasir"
+                disabled
+                className="bg-zinc-50 text-zinc-500 cursor-not-allowed"
               />
               {errors.slug && (
                 <p className="mt-1 text-sm text-red-600">{errors.slug.message}</p>
@@ -169,6 +182,7 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
               Deskripsi Singkat
             </label>
             <input
+              type="text"
               {...register("short_description")}
               placeholder="Deskripsi singkat untuk tampilan kartu produk"
             />
@@ -225,13 +239,16 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
           {/* Demo URL */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1">
-              URL Demo
+              URL Demo <span className="text-zinc-400 font-normal">(opsional)</span>
             </label>
             <input
-              type="url"
+              type="text"
               {...register("demo_url")}
-              placeholder="https://demo.example.com"
+              placeholder="https://demo.example.com atau #"
             />
+            <p className="mt-1 text-xs text-zinc-500">
+              Kosongkan atau isi # jika belum ada demo
+            </p>
           </div>
 
           {/* Status & Featured */}
@@ -300,7 +317,7 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => router.push("/admin/dashboard")}
+              onClick={() => router.push("/manage/dashboard")}
             >
               Batal
             </Button>

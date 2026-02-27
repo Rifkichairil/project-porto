@@ -14,7 +14,7 @@ import {
   validateWhatsAppNumber,
   SiteSettings 
 } from "@/lib/settings";
-import { MessageCircle, Mail, Globe, Check } from "lucide-react";
+import { MessageCircle, Mail, Globe, Check, Eye } from "lucide-react";
 
 export default function SettingsPage() {
   const { data: session, status } = useSession();
@@ -28,7 +28,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/admin");
+      router.push("/manage");
     }
   }, [status, router]);
 
@@ -223,6 +223,93 @@ export default function SettingsPage() {
                     onChange={(e) => handleChange("siteDescription", e.target.value)}
                     placeholder="Laravel Developer & Solusi Digital"
                   />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Display Settings */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+                    <Eye className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-zinc-900">{t("settings.display.title")}</h2>
+                    <p className="text-sm text-zinc-500">{t("settings.display.subtitle")}</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Demo Button Toggle */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-900">
+                      {t("settings.display.demoButton")}
+                    </label>
+                    <p className="text-sm text-zinc-500 mt-0.5">
+                      {t("settings.display.demoButtonHint")}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleChange("showDemoButton", !settings.showDemoButton)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.showDemoButton ? "bg-zinc-900" : "bg-zinc-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.showDemoButton ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Price Display Mode */}
+                <div className="space-y-3 pt-4 border-t border-zinc-100">
+                  <label className="block text-sm font-medium text-zinc-900">
+                    {t("settings.display.priceMode")}
+                  </label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="priceMode"
+                        value="show"
+                        checked={settings.priceDisplayMode === "show"}
+                        onChange={(e) => handleChange("priceDisplayMode", e.target.value)}
+                        className="w-4 h-4 text-zinc-900 border-zinc-300 focus:ring-zinc-900"
+                      />
+                      <span className="text-sm text-zinc-700">{t("settings.display.priceShow")}</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="priceMode"
+                        value="hide"
+                        checked={settings.priceDisplayMode === "hide"}
+                        onChange={(e) => handleChange("priceDisplayMode", e.target.value)}
+                        className="w-4 h-4 text-zinc-900 border-zinc-300 focus:ring-zinc-900"
+                      />
+                      <span className="text-sm text-zinc-700">{t("settings.display.priceHide")}</span>
+                    </label>
+                  </div>
+                  
+                  {/* Custom Text Input */}
+                  {settings.priceDisplayMode === "hide" && (
+                    <div className="mt-3">
+                      <label className="block text-sm font-medium text-zinc-700 mb-1">
+                        {t("settings.display.priceCustomText")}
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.priceCustomText}
+                        onChange={(e) => handleChange("priceCustomText", e.target.value)}
+                        placeholder={t("settings.display.priceCustomTextPlaceholder")}
+                      />
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

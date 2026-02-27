@@ -71,7 +71,7 @@ export default function Navbar() {
 
           {/* CTA Button & Language */}
           <div className="hidden md:flex items-center gap-3">
-            <LanguageSwitcher variant="minimal" />
+            <LanguageSwitcher />
             <a
               href={whatsappLink}
               target="_blank"

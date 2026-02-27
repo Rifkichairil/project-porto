@@ -30,10 +30,18 @@ export default async function HomePage() {
   }
 
   // Calculate stats based on actual data
+  const activeProducts = products.filter(p => p.status === "active").length;
+  const totalProducts = products.length;
+  
+  // Calculate years from first product creation date, or default to 1
+  const years = products.length > 0 
+    ? Math.max(1, Math.floor((Date.now() - new Date(products[0].created_at).getTime()) / (365 * 24 * 60 * 60 * 1000)))
+    : 1;
+  
   const stats = {
-    products: products.length,
-    projects: products.length + 5, // Products + other projects
-    years: 2,
+    products: totalProducts,
+    projects: activeProducts, // Active products count as completed projects
+    years: years,
   };
 
   return (

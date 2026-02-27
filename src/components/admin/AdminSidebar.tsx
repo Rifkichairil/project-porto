@@ -26,26 +26,26 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   const { t } = useI18n();
 
   const navigation = [
-    { name: t("admin.sidebar.dashboard"), href: "/admin/dashboard", icon: LayoutDashboard },
-    { name: t("admin.sidebar.products"), href: "/admin/products", icon: Package },
-    { name: t("admin.sidebar.settings"), href: "/admin/settings", icon: Settings },
+    { name: t("admin.sidebar.dashboard"), href: "/manage/dashboard", icon: LayoutDashboard },
+    { name: t("admin.sidebar.products"), href: "/manage/products", icon: Package },
+    { name: t("admin.sidebar.settings"), href: "/manage/settings", icon: Settings },
   ];
 
   // Helper function to check if menu is active
   const isActive = (href: string) => {
-    if (href === "/admin/dashboard") {
-      // Only active if exactly /admin/dashboard
-      return pathname === "/admin/dashboard";
+    if (href === "/manage/dashboard") {
+      // Only active if exactly /manage/dashboard
+      return pathname === "/manage/dashboard";
     }
-    if (href === "/admin/products") {
-      // Active for /admin/products and sub-routes like /admin/products/new
-      return pathname === "/admin/products" || pathname.startsWith("/admin/products/");
+    if (href === "/manage/products") {
+      // Active for /manage/products and sub-routes like /manage/products/new
+      return pathname === "/manage/products" || pathname.startsWith("/manage/products/");
     }
     return pathname === href;
   };
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/admin" });
+    await signOut({ callbackUrl: "/manage" });
   };
 
   return (

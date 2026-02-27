@@ -82,22 +82,23 @@ export default function Hero({ stats }: HeroProps) {
         </div>
 
         {/* Stats - Dynamic */}
-        <div className="mt-20 grid grid-cols-3 gap-8 max-w-md mx-auto animate-fade-in" style={{ animationDelay: '0.4s' }}>
+        <div className={`mt-20 grid gap-8 max-w-md mx-auto animate-fade-in ${stats.products === stats.projects ? 'grid-cols-2' : 'grid-cols-3'}`} style={{ animationDelay: '0.4s' }}>
           {[
-            { value: `${stats.products}+`, label: t("stats.products") },
-            { value: `${stats.projects}+`, label: t("stats.projects") },
-            { value: `${stats.years}+`, label: t("stats.years") },
-          ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <p className="text-3xl md:text-4xl font-semibold text-zinc-900">{stat.value}</p>
-              <p className="mt-1 text-sm text-zinc-500">{stat.label}</p>
-            </div>
-          ))}
+            { value: `${stats.products}+`, label: t("stats.products"), show: true },
+            { value: `${stats.projects}+`, label: t("stats.projects"), show: stats.products !== stats.projects },
+            { value: `${stats.years}+`, label: t("stats.years"), show: true },
+          ]
+            .filter(stat => stat.show)
+            .map((stat, index) => (
+              <div key={index} className="text-center">
+                <p className="text-3xl md:text-4xl font-semibold text-zinc-900">{stat.value}</p>
+                <p className="mt-1 text-sm text-zinc-500">{stat.label}</p>
+              </div>
+            ))}
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 text-zinc-400">
-          <span className="text-xs font-medium uppercase tracking-wider">{t("hero.scroll")}</span>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block">
           <div className="w-px h-8 bg-gradient-to-b from-zinc-400 to-transparent" />
         </div>
       </div>

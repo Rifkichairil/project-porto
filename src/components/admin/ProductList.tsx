@@ -62,7 +62,7 @@ export default function ProductList({ products }: ProductListProps) {
           </svg>
         </div>
         <p className="text-zinc-500 mb-4">Belum ada produk</p>
-        <Link href="/admin/products/new">
+        <Link href="/manage/products/new">
           <Button>Tambah Produk Pertama</Button>
         </Link>
       </div>
@@ -128,7 +128,7 @@ export default function ProductList({ products }: ProductListProps) {
                         <ExternalLink className="w-4 h-4" />
                       </Button>
                     </Link>
-                    <Link href={`/admin/products/${product.id}/edit`}>
+                    <Link href={`/manage/products/${product.id}/edit`}>
                       <Button variant="ghost" size="sm">
                         <Edit className="w-4 h-4" />
                       </Button>
