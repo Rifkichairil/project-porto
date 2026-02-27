@@ -235,8 +235,8 @@ async function seedProducts() {
   
   const existingSlugs = new Set(existing?.map((p) => p.slug) || []);
   
-  const productsToInsert = [];
-  const imagesToInsert = [];
+  const productsToInsert: any[] = [];
+  const imagesToInsert: any[] = [];
   
   for (const product of products) {
     if (existingSlugs.has(product.slug)) {

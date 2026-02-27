@@ -32,7 +32,7 @@ export default function SettingsPage() {
     }
   }, [status, router]);
 
-  const handleChange = (field: keyof SiteSettings, value: string) => {
+  const handleChange = (field: keyof SiteSettings, value: string | boolean) => {
     setSettings((prev) => ({ ...prev, [field]: value }));
     // Clear error when user types
     if (errors[field]) {
